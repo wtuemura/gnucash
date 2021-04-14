@@ -13,7 +13,6 @@
 ;;    
 ;;    Line & column alignments may still not conform with
 ;;    textbook accounting practice (they're close though!).
-;;    The 'canonically-tabbed option is currently broken.
 ;;    
 ;;    Progress bar functionality is currently mostly broken.
 ;;    
@@ -121,7 +120,6 @@
 (define optname-show-rates (N_ "Show Exchange Rates"))
 (define opthelp-show-rates (N_ "Show the exchange rates used."))
 
-(define pagename-entries (N_ "Entries"))
 (define optname-two-column
   (N_ "Display as a two column report"))
 (define opthelp-two-column
@@ -361,7 +359,7 @@
          (parent-balance-mode (get-option gnc:pagename-display
                                            optname-parent-balance-mode))
          (parent-total-mode
-	  (assq-ref '((t . #t) (f . #f) (canonically-tabbed . canonically-tabbed))
+	  (assq-ref '((t . #t) (f . #f))
 		    (get-option gnc:pagename-display
 				optname-parent-total-mode)))
          (show-zb-accts? (get-option gnc:pagename-display
@@ -417,10 +415,6 @@
 	 table (* tree-depth 2) "primary-subheading" #f label 0 1 "total-label-cell"
 	 (gnc:sum-collector-commodity balance report-commodity exchange-fn)
 	 (1- (* tree-depth 2)) 1 "total-number-cell")))
-    
-    ;; wrapper around gnc:html-table-append-ruler!
-    (define (add-rule table)
-      (gnc:html-table-append-ruler! table (* 2 tree-depth)))
 
     (cond
      ((null? accounts)

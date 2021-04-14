@@ -60,7 +60,7 @@ the remainder of the transaction as it was last entered.")
 Transfer register column, and GnuCash will complete the name from \
 your list of accounts. For subaccounts, type the first letter(s) \
 of the parent account, followed by ':' and the first letter(s) of \
-the subaccount (e.g. A:C for Assets:Cash.)")
+the subaccount (e.g. A:C for Assets:Cash).")
 
  N_( "Want to see all your subaccount transactions in one register? \
 From the Accounts tab in the main window, highlight the parent account \
@@ -87,7 +87,7 @@ of a security, which makes it easy to see which online sources your \
 securities use. Click the triangle at the far right of the column \
 headings to change the display.")
 
- N_( "You can pack multiple reports into a single window,  \
+ N_( "You can pack multiple reports into a single window, \
 providing all the financial information you want at a glance. \
 To do so, use the Sample & Custom->\"Custom Multicolumn Report\" \
 report.")

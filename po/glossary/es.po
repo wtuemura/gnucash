@@ -6,14 +6,17 @@
 # Eneko Lacunza <enlar@enlar.net>, 2004.
 # Gabriel Ortiz Severino <gabrielortizseverino@gmail.com>, 2021.
 # Pablo <ppicapietra@gmail.com>, 2021.
+# Jaime Marquínez Ferrándiz <weblate@jregistros.fastmail.net>, 2021.
+# Guille <willelopz+weblate@gmail.com>, 2021.
+# Guille Lopez <willelopz@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnucash-glossary 1.8.9\n"
 "Report-Msgid-Bugs-To: https://bugs.gnucash.org/enter_bug."
 "cgi?product=GnuCash&component=Translations\n"
 "POT-Creation-Date: 2021-01-10 08:00+0100\n"
-"PO-Revision-Date: 2021-02-12 02:50+0000\n"
-"Last-Translator: Pablo <ppicapietra@gmail.com>\n"
+"PO-Revision-Date: 2021-03-30 23:26+0000\n"
+"Last-Translator: Guille Lopez <willelopz@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/gnucash/glossary/"
 "es/>\n"
 "Language: es\n"
@@ -21,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5-dev\n"
+"X-Generator: Weblate 4.6-dev\n"
 
 #. "English Definition (Dear translator: This file will never be visible to the user! It should only serve as a tool for you, the translator. Nothing more.)"
 msgid "Term (Dear translator: This file will never be visible to the user!)"
@@ -92,14 +95,12 @@ msgid "account type: Mutual fund"
 msgstr "tipo de cuenta: Fondo de Inversión"
 
 #. "The right side of the balance sheet in T account form shows the source of funds and contains equity & liability. While not common in english, most languages would translate 'equity & liability' with 'passive'. Complement: Active. See also: Report Form Implementation: https://bugs.gnucash.org/show_bug.cgi?id=421766"
-#, fuzzy
 msgid "account type: Passive"
-msgstr "tipo de cuenta: Activo"
+msgstr "tipo de cuenta: Pasivo"
 
 #. "Group of accounts tracking your success, complement of 'Assets & Liabilities'"
-#, fuzzy
 msgid "account type: Profit & Loss"
-msgstr "tipo de cuenta: Activo"
+msgstr "tipo de cuenta: Ganancias & pérdidas"
 
 #. "1. (US) any type of account that earns interest 2. (Brit) any type of bank account that earns a higher level of interest than a current account or deposit account"
 msgid "account type: saving"
@@ -196,7 +197,7 @@ msgstr "acción: transferencia"
 
 #. "-"
 msgid "action: wire"
-msgstr ""
+msgstr "acción: transferir"
 
 #. "-"
 msgid "action: withdraw"
@@ -255,7 +256,7 @@ msgstr "condiciones de pago"
 
 #. "The dataset that encapsulates all the collections of entities (accounts etc.) in gnucash. The written records of the financial affairs of a business."
 msgid "Book"
-msgstr ""
+msgstr "Libro"
 
 #. "Completing the records of financial affairs for a specific time period, e.g. at the end of the year."
 msgid "book closing"
@@ -263,7 +264,7 @@ msgstr ""
 
 #. "An estimate or plan of the money available to somebody and how it will be spent over a period of time."
 msgid "Budget"
-msgstr ""
+msgstr "Presupuesto"
 
 #. "-"
 msgid "business (adjective)"
@@ -314,9 +315,8 @@ msgid "commodity option: Symbol"
 msgstr "opción de valor: Símbolo"
 
 #. "interest which is earned on both the initial deposit and on any interest that has already been earned but left on deposit."
-#, fuzzy
 msgid "compound interests"
-msgstr "interés"
+msgstr "interés compuesto"
 
 #. "(a) A sum of money paid into an account. (b) A record of such a payment. (c) The state of having money in one's bank account."
 msgid "Credit (column in register)"
@@ -331,9 +331,8 @@ msgid "credit transfer"
 msgstr "transferencia (bancaria)"
 
 #. "A document that you give to a client that says you owe money to the client, i.e. the opposite of an invoice"
-#, fuzzy
 msgid "credit note"
-msgstr "transferencia (bancaria)"
+msgstr "nota de crédito"
 
 #. "The system of money used in a country"
 msgid "currency"
@@ -345,7 +344,7 @@ msgstr "Personalizado"
 
 #. "Compact, well-structured presentation of informations. See https://en.wikipedia.org/wiki/Dashboard_(business)"
 msgid "dashboard"
-msgstr ""
+msgstr "panel de control"
 
 #. "The backend where the data is stored."
 msgid "database"
@@ -369,7 +368,7 @@ msgstr "Debe (columna en el libro), Cargo"
 
 #. "Each option has a default setting that it is shipped with, until the user changes the setting."
 msgid "default"
-msgstr "defecto"
+msgstr "predeterminado/a"
 
 #. "see credit"
 msgid "deposit (in the reconcile dialog)"
@@ -384,9 +383,8 @@ msgid "Description (column in register)"
 msgstr "Descripción"
 
 #. "Reductions to a basic price of goods or services. Your language might distinguish between discounts dealing with payments (billing terms) and others (invoice)."
-#, fuzzy
 msgid "discount"
-msgstr "cuenta"
+msgstr "descuento"
 
 #. "Important Buzzword :)"
 msgid "double entry"
@@ -398,7 +396,7 @@ msgstr ""
 
 #. "Electronic mail. Some languages allow different writings, but each team should use only one. https://en.wikipedia.org/wiki/Email"
 msgid "email"
-msgstr ""
+msgstr "correo electrónico"
 
 #. "a person who works for somebody or a company in return for wages"
 msgid "employee"
@@ -447,7 +445,7 @@ msgstr "acción: pago"
 
 #. "Free software is a matter of liberty, not price … see https://en.wikipedia.org/wiki/Free_software"
 msgid "free software"
-msgstr ""
+msgstr "software libre"
 
 #. "An increase in wealth; profit; advantage (See also: capital gains)"
 msgid "gain"
@@ -463,7 +461,7 @@ msgstr "importar"
 
 #. "Report that ... FIXME: add description. This report used to be called the 'Profit & Loss', but it was renamed on 2004-07-13."
 msgid "income statement"
-msgstr ""
+msgstr "declaración de ingresos"
 
 #. "Money charged for borrowing money, or paid to somebody who invests money"
 msgid "interest"
@@ -504,14 +502,12 @@ msgid "Lost Accounts"
 msgstr "Cuentas perdidas"
 
 #. "A particular collection of items that were bought in one transaction. A lot is typically formed when the item is bought, and is closed when the item is sold out. Needed e.g. for U.S. tax purposes."
-#, fuzzy
 msgid "Lot"
-msgstr "Tot."
+msgstr "Lote"
 
 #. "Combine two books into one (see book)."
-#, fuzzy
 msgid "merge, to"
-msgstr "recargar"
+msgstr "unir"
 
 #. "The thing that the scatter plot uses to mark each data point"
 msgid "marker"
@@ -564,7 +560,7 @@ msgstr "beneficio neta"
 
 #. "Your net worth is your assets minus your liabilities. If your accounts are balanced, your net worth should equal your equity plus your net profit."
 msgid "net worth"
-msgstr ""
+msgstr "patrimonio neto"
 
 #. "One textfield per transaction that can hold explanatory text about the transaction."
 msgid "notes (register)"
@@ -731,7 +727,7 @@ msgstr "Descripción"
 
 #. "(In the customer summary report) The total amount of money received because something was sold."
 msgid "sales"
-msgstr ""
+msgstr "ventas"
 
 #. "To write data (typically a file) to a storage medium, such as a disk or tape."
 msgid "save, to (to a file)"
@@ -783,10 +779,8 @@ msgid "tax info"
 msgstr "información sobre impuestos"
 
 #. "Amost everybody has to declare and probably pay it. See https://en.wikipedia.org/wiki/Income_tax"
-#, fuzzy
-#| msgid "account type: Income"
 msgid "tax type: income tax"
-msgstr "tipo de cuenta: Ingresos"
+msgstr "tipo de cuenta: impuesto sobre la renta"
 
 #. "Usually only business users have to handle it, see https://en.wikipedia.org/wiki/Sales_tax."
 msgid "tax type: sales tax"
@@ -798,7 +792,7 @@ msgstr ""
 
 #. "'Value Added Tax' is the other form of sales tax."
 msgid "tax type: VAT"
-msgstr ""
+msgstr "tipo de impuesto: IVA"
 
 #. "If you create a new e.g. style sheet, you can start from a template."
 msgid "template"

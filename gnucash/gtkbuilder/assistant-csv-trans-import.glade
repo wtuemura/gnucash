@@ -66,7 +66,7 @@ Apart from a choice of delimiter, there are several options to tweak the importe
 
 The importer can handle files where transactions are split over multiple lines, with each line representing one split.
 
-Lastly, for repeated imports the preview page has buttons to Load and Save the settings. To save the settings, tweak the settings to your preferences (optionally starting from an existing preset), then (optionally change the settings name and press the Save Settings button. Note you can't save to built-in presets.</property>
+Lastly, for repeated imports the preview page has buttons to Load and Save the settings. You can save your adjusted settings to reuse them on later imports. After loading your settings you can also tweak them again for similar imports and save them under another name.</property>
         <property name="wrap">True</property>
       </object>
       <packing>
@@ -445,8 +445,7 @@ There are two reserved names which can't be used to save custom settings:
                               <object class="GtkLabel" id="label2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">•</property>
-                                <property name="use_markup">True</property>
+                                <property name="label">•</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
@@ -460,7 +459,6 @@ There are two reserved names which can't be used to save custom settings:
                                 <property name="can_focus">False</property>
                                 <property name="halign">start</property>
                                 <property name="label" translatable="yes">Double-click anywhere on the table below to insert a column break</property>
-                                <property name="use_markup">True</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
                               </object>
@@ -473,8 +471,7 @@ There are two reserved names which can't be used to save custom settings:
                               <object class="GtkLabel" id="label4">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">•</property>
-                                <property name="use_markup">True</property>
+                                <property name="label">•</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
@@ -488,7 +485,6 @@ There are two reserved names which can't be used to save custom settings:
                                 <property name="can_focus">False</property>
                                 <property name="halign">start</property>
                                 <property name="label" translatable="yes">Right-click anywhere in a column to modify it (widen, narrow, merge)</property>
-                                <property name="use_markup">True</property>
                                 <property name="wrap">True</property>
                                 <property name="xalign">0</property>
                               </object>

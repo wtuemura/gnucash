@@ -1194,10 +1194,10 @@ gnc_plugin_page_report_constr_init(GncPluginPageReport *plugin_page, gint report
     gchar *saved_reports_path = gnc_build_userdata_path (SAVED_REPORTS_FILE);
     gchar *report_save_str = g_strdup_printf (
         _("Update the current report's saved configuration. "
-        "The report configuration will be saved in the file %s. "), saved_reports_path);
+          "The report configuration will be saved in the file %s."), saved_reports_path);
     gchar *report_saveas_str = g_strdup_printf (
-        _("Add the current report's configuration to the `Reports->Saved Report Configurations' menu. "
-        "The report configuration will be saved in the file %s. "), saved_reports_path);
+        _("Add the current report's configuration to the 'Reports->Saved Report Configurations' menu. "
+          "The report configuration will be saved in the file %s."), saved_reports_path);
 
     GtkActionEntry report_actions[] =
     {
@@ -1425,6 +1425,12 @@ gnc_plugin_page_report_back_cb( GtkAction *action, GncPluginPageReport *report )
         gnc_html_show_url(priv->html, node->type, node->location,
                           node->label, 0);
     }
+}
+
+void
+gnc_plugin_page_report_reload (GncPluginPageReport *report)
+{
+    gnc_plugin_page_report_reload_cb (NULL, report);
 }
 
 static void

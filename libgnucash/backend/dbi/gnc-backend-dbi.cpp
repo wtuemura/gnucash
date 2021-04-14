@@ -37,9 +37,6 @@ extern "C"
 
 #include <inttypes.h>
 #include <errno.h>
-#include <glib.h>
-#include <glib/gstdio.h>
-
 #include "qof.h"
 #include "qofquery-p.h"
 #include "qofquerycore-p.h"
@@ -61,6 +58,10 @@ extern "C"
 #endif
 
 }
+
+#include <glib.h>
+#include <glib/gstdio.h>
+
 #include <boost/regex.hpp>
 #include <string>
 #include <iomanip>
@@ -660,7 +661,7 @@ GncDbiBackend<Type>::session_begin (QofSession* session, const char* new_uri,
             uri.m_portnum = PGSQL_DEFAULT_PORT;
         /* Postgres's SQL interface coerces identifiers to lower case, but the
          * C interface is case-sensitive. This results in a mixed-case dbname
-         * being created (with a lower case name) but then dbi can't conect to
+         * being created (with a lower case name) but then dbi can't connect to
          * it. To work around this, coerce the name to lowercase first. */
         auto lcname = g_utf8_strdown (uri.dbname(), -1);
         uri.m_dbname = std::string{lcname};

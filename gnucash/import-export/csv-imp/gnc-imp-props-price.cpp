@@ -27,19 +27,23 @@ extern "C" {
 #include <windows.h>
 #endif
 
-#include <glib.h>
-#include <glib/gi18n.h>
-
 #include "engine-helpers.h"
 #include "gnc-ui-util.h"
 }
 
+#include <glib.h>
+#include <glib/gi18n.h>
+
 #include <exception>
 #include <map>
 #include <string>
+#include <boost/locale.hpp>
 #include <boost/regex.hpp>
 #include <boost/regex/icu.hpp>
+#include <gnc-locale-utils.hpp>
 #include "gnc-imp-props-price.hpp"
+
+namespace bl = boost::locale;
 
 G_GNUC_UNUSED static QofLogModule log_module = GNC_MOD_IMPORT;
 
@@ -231,17 +235,17 @@ void GncImportPrice::set (GncPricePropType prop_type, const std::string& value, 
     }
     catch (const std::invalid_argument& e)
     {
-        auto err_str = std::string(_(gnc_price_col_type_strs[prop_type])) +
-                       std::string(_(" could not be understood.\n")) +
-                       e.what();
+        auto err_str = (bl::format (bl::translate ("Column '{1}' could not be understood.\n")) %
+                        bl::translate (gnc_price_col_type_strs[prop_type])).str(gnc_get_boost_locale()) +
+                        e.what();
         m_errors.emplace(prop_type, err_str);
         throw std::invalid_argument (err_str);
     }
     catch (const std::out_of_range& e)
     {
-        auto err_str = std::string(_(gnc_price_col_type_strs[prop_type])) +
-                       std::string(_(" could not be understood.\n")) +
-                       e.what();
+        auto err_str = (bl::format (bl::translate ("Column '{1}' could not be understood.\n")) %
+                        bl::translate (gnc_price_col_type_strs[prop_type])).str(gnc_get_boost_locale()) +
+                        e.what();
         m_errors.emplace(prop_type, err_str);
         throw std::invalid_argument (err_str);
     }

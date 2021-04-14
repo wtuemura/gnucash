@@ -1057,12 +1057,18 @@ the option '~a'."))
      section name sort-tag 'multichoice documentation-string
      (lambda () value)
      (lambda (x)
-       (if (multichoice-legal x ok-values)
-           (begin
-             (set! value x)
-             (if (procedure? setter-function-called-cb)
-                 (setter-function-called-cb x)))
-           (rpterror-earlier "multichoice" x default-value)))
+       (cond
+        ((and (equal? section "Display")
+              (equal? name "Parent account subtotals")
+              (equal? x 'canonically-tabbed))
+         (gnc:warn "canonically-tabbed obsolete. switching to 't")
+         (set! value 't))
+        ((not (multichoice-legal x ok-values))
+         (rpterror-earlier "multichoice" x default-value))
+        (else
+         (set! value x)
+         (if (procedure? setter-function-called-cb)
+             (setter-function-called-cb x)))))
      (lambda () default-value)
      (gnc:restore-form-generator value->string)
      (lambda (b p) (qof-book-set-option b (symbol->string value) p))
@@ -1818,6 +1824,7 @@ the option '~a'."))
       ("Common Currency" "Currency" "Common Currency")
       ("Show original currency amount" "Currency" "Show original currency amount")
       ("Report's currency" "Currency" "Report's currency")
+      ("Reconcile Status" #f "Reconciled Status")
       ;; new-owner-report.scm, renamed Oct 2020 to differentiate with
       ;; Document Links:
       ("Links" #f "Transaction Links")
@@ -1825,6 +1832,7 @@ the option '~a'."))
       ("Individual Taxes" #f "Use Detailed Tax Summary")
       ;; income-gst-statement.scm
       ("default format" #f "Default Format")
+      ("Report format" #f "Report Format")
       ))
 
   (define (lookup-option section name)
