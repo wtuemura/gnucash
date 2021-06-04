@@ -3120,26 +3120,31 @@ gnc_account_lookup_by_full_name (const Account *any_acc,
     return found;
 }
 
-Account*
+GList*
 gnc_account_lookup_by_type_and_commodity (Account* root,
                                           const char* name,
                                           GNCAccountType acctype,
                                           gnc_commodity* commodity)
 {
+    GList *retval{};
     auto rpriv{GET_PRIVATE(root)};
     for (auto node = rpriv->children; node; node = node->next)
     {
         auto account{static_cast<Account*>(node->data)};
-        if (xaccAccountGetType (account) == acctype &&
-            gnc_commodity_equiv(xaccAccountGetCommodity (account), commodity))
+        if (xaccAccountGetType (account) == acctype)
         {
-            if (name && strcmp(name, xaccAccountGetName(account)))
-                continue; //name doesn't match so skip this one
+            if (commodity &&
+                !gnc_commodity_equiv(xaccAccountGetCommodity (account),
+                                     commodity))
+                continue;
 
-            return account;
+            if (name && strcmp(name, xaccAccountGetName(account)))
+                continue;
+
+            retval = g_list_prepend(retval, account);
         }
     }
-    return nullptr;
+    return retval;
 }
 
 void
@@ -3609,8 +3614,8 @@ xaccAccountConvertBalanceToCurrency(const Account *acc, /* for book */
 gnc_numeric
 xaccAccountConvertBalanceToCurrencyAsOfDate(const Account *acc, /* for book */
         gnc_numeric balance,
-        gnc_commodity *balance_currency,
-        gnc_commodity *new_currency,
+        const gnc_commodity *balance_currency,
+        const gnc_commodity *new_currency,
         time64 date)
 {
     QofBook *book;
@@ -3623,7 +3628,7 @@ xaccAccountConvertBalanceToCurrencyAsOfDate(const Account *acc, /* for book */
     book = gnc_account_get_book (acc);
     pdb = gnc_pricedb_get_db (book);
 
-    balance = gnc_pricedb_convert_balance_nearest_price_t64(
+    balance = gnc_pricedb_convert_balance_nearest_before_price_t64 (
                   pdb, balance, balance_currency, new_currency, date);
 
     return balance;
@@ -3666,8 +3671,8 @@ xaccAccountGetXxxBalanceAsOfDateInCurrency(Account *acc, time64 date,
     g_return_val_if_fail(GNC_IS_COMMODITY(report_commodity), gnc_numeric_zero());
 
     priv = GET_PRIVATE(acc);
-    return xaccAccountConvertBalanceToCurrency(
-               acc, fn(acc, date), priv->commodity, report_commodity);
+    return xaccAccountConvertBalanceToCurrencyAsOfDate(
+               acc, fn(acc, date), priv->commodity, report_commodity, date);
 }
 
 /*
@@ -3769,7 +3774,7 @@ xaccAccountGetXxxBalanceInCurrencyRecursive (const Account *acc,
 static gnc_numeric
 xaccAccountGetXxxBalanceAsOfDateInCurrencyRecursive (
     Account *acc, time64 date, xaccGetBalanceAsOfDateFn fn,
-    gnc_commodity *report_commodity, gboolean include_children)
+    const gnc_commodity *report_commodity, gboolean include_children)
 {
     gnc_numeric balance;
 
@@ -3841,8 +3846,9 @@ xaccAccountGetPresentBalanceInCurrency (const Account *acc,
                                         const gnc_commodity *report_commodity,
                                         gboolean include_children)
 {
-    return xaccAccountGetXxxBalanceInCurrencyRecursive (
-               acc, xaccAccountGetPresentBalance, report_commodity,
+    return xaccAccountGetXxxBalanceAsOfDateInCurrencyRecursive (
+               (Account*)acc, gnc_time64_get_today_end (), xaccAccountGetBalanceAsOfDate,
+               report_commodity,
                include_children);
 }
 
@@ -4508,8 +4514,17 @@ gboolean
 xaccAccountTypesCompatible (GNCAccountType parent_type,
                             GNCAccountType child_type)
 {
-    return ((xaccParentAccountTypesCompatibleWith (parent_type) &
-             (1 << child_type))
+    /* ACCT_TYPE_NONE isn't compatible with anything, even ACCT_TYPE_NONE. */
+    if (parent_type == ACCT_TYPE_NONE || child_type == ACCT_TYPE_NONE)
+        return FALSE;
+
+    /* ACCT_TYPE_ROOT can't have a parent account, and asking will raise
+     * an error. */
+    if (child_type == ACCT_TYPE_ROOT)
+        return FALSE;
+
+    return ((xaccParentAccountTypesCompatibleWith (child_type) &
+             (1 << parent_type))
             != 0);
 }
 

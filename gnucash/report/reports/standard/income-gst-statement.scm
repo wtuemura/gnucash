@@ -155,20 +155,23 @@ for taxes paid on expenses, and type LIABILITY for taxes collected on sales.")
    options
    (gnc:make-multichoice-callback-option
     pagename-format (N_ "Report Format")
-    "a" (G_ "Report Format") 'default
-    (list (vector 'default
-                  (G_ "Default Format")
-                  (G_ "Default Format"))
-          (vector 'au-bas
-                  (G_ "Australia BAS")
-                  (G_ "Australia Business Activity Statement. Specify sales, \
-purchase and tax accounts."))
-          (vector 'uk-vat
-                  (G_ "UK VAT Return")
-                  (G_ "UK VAT Return. Specify sales, purchase and tax \
+    "a"
+    (string-join
+     (list
+      (G_ "Report Format")
+      (G_ "Default Format")
+      (G_ "Australia Business Activity Statement. Specify sales, \
+purchase and tax accounts.")
+      (G_ "UK VAT Return. Specify sales, purchase and tax \
 accounts. EU rules may be used. Denote EU VAT accounts *EUVAT* in \
 account description, and denote EU goods sales and purchases accounts \
-with *EUGOODS* in the account description."))) #f
+with *EUGOODS* in the account description."))
+     "\n* ")
+    'default
+    (list (vector 'default (G_ "Default Format"))
+          (vector 'au-bas (G_ "Australia BAS"))
+          (vector 'uk-vat (G_ "UK VAT Return")))
+     #f
     (lambda (x)
       (for-each
        (match-lambda
@@ -292,7 +295,7 @@ with *EUGOODS* in the account description."))) #f
     ;;         start-dual-column?   - unused in GST report
     ;;         friendly-heading-fn  - unused in GST report
 
-    (case (opt-val pagename-format "Report format")
+    (case (opt-val pagename-format "Report Format")
       ((default)
        (let* ((net-sales (lambda (s) (myneg (split-adder s accounts-sales))))
               (tax-sales (lambda (s) (myneg (split-adder s accounts-tax-collected))))
@@ -398,15 +401,15 @@ with *EUGOODS* in the account description."))) #f
               (box-8 (lambda (s) (myneg (split-adder s eu-sales-accts))))
               (box-9 (lambda (s) (split-adder s eu-purch-accts))))
          (list
-          (vector "Box 1 VAT Sales"          box-1 #f #t #f #f)
-          (vector "Box 2 VAT Reverse EU"     box-2 #f #t #f #f)
-          (vector "Box 3 VAT Output"         box-3 #f #t #f #f)
-          (vector "Box 4 VAT Purchases"      box-4 #f #t #f #f)
-          (vector "Box 5 VAT Difference"     box-5 #f #t #f #f)
-          (vector "Box 6 Tot Sales"          box-6 #f #t #f #f)
-          (vector "Box 7 Tot Purchases"      box-7 #f #t #f #f)
-          (vector "Box 8 EU Goods Sales"     box-8 #f #t #f #f)
-          (vector "Box 9 EU Goods Purchases" box-9 #f #t #f #f)))))))
+          (vector "Box 1 VAT Sales"                         box-1 #f #t #f #f)
+          (vector "Box 2 VAT Goods Purchases from EU to NI" box-2 #f #t #f #f)
+          (vector "Box 3 VAT Output"                        box-3 #f #t #f #f)
+          (vector "Box 4 VAT Purchases"                     box-4 #f #t #f #f)
+          (vector "Box 5 VAT Difference"                    box-5 #f #t #f #f)
+          (vector "Box 6 Tot Sales"                         box-6 #f #t #f #f)
+          (vector "Box 7 Tot Purchases"                     box-7 #f #t #f #f)
+          (vector "Box 8 Net Goods Sales from NI to EU"     box-8 #f #t #f #f)
+          (vector "Box 9 Net Goods Purchases from EU to NI" box-9 #f #t #f #f)))))))
 
 ;; Define the report.
 (gnc:define-report

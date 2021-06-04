@@ -154,7 +154,6 @@ gnucash/gnome-utils/gnc-cell-renderer-popup-entry.c
 gnucash/gnome-utils/gnc-cell-renderer-text-flag.c
 gnucash/gnome-utils/gnc-cell-renderer-text-view.c
 gnucash/gnome-utils/gnc-cell-view.c
-gnucash/gnome-utils/gnc-combott.c
 gnucash/gnome-utils/gnc-commodity-edit.c
 gnucash/gnome-utils/gnc-component-manager.c
 gnucash/gnome-utils/gnc-currency-edit.c
@@ -488,6 +487,7 @@ gnucash/report/reports/standard/dashboard.scm
 gnucash/report/reports/standard/equity-statement.scm
 gnucash/report/reports/standard/general-journal.scm
 gnucash/report/reports/standard/general-ledger.scm
+gnucash/report/reports/standard/ifrs-cost-basis.scm
 gnucash/report/reports/standard/income-gst-statement.scm
 gnucash/report/reports/standard/income-statement.scm
 gnucash/report/reports/standard/invoice.scm

@@ -76,8 +76,6 @@
 #include "gnc-icons.h"
 #include "print-session.h"
 
-#define WINDOW_REPORT_CM_CLASS "window-report"
-
 /* NW: you can add GNC_MOD_REPORT to gnc-engine.h
 or simply define it locally. Any unique string with
 a gnucash- prefix will do. Then just set a log level
@@ -497,6 +495,8 @@ gnc_plugin_page_report_create_widget( GncPluginPage *page )
     gnc_plugin_page_report_load_cb (priv->html, type, id_name, url_label, report);
     g_free(id_name);
     g_free(child_name);
+    g_free (url_label);
+    g_free (url_location);
 
     // FIXME.  This is f^-1(f(x)), isn't it?
     DEBUG( "id=%d", priv->reportId );

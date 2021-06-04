@@ -213,7 +213,7 @@ gnc_account_opening_balance_button_update (AccountWindow *aw, gnc_commodity *com
     Account *ob_account = gnc_account_lookup_by_opening_balance (gnc_book_get_root_account (aw->book), commodity);
     gboolean has_splits = (xaccAccountGetSplitList (account) != NULL);
 
-    if (xaccAccountGetType (account) != ACCT_TYPE_EQUITY)
+    if (aw->type != ACCT_TYPE_EQUITY)
     {
         gtk_widget_set_sensitive (aw->opening_balance_button, FALSE);
         return;
@@ -589,7 +589,7 @@ make_children_compatible (AccountWindow *aw)
     account = aw_get_account (aw);
     g_return_if_fail (account);
 
-    if (xaccAccountTypesCompatible (xaccAccountGetType (account), aw->type))
+    if (xaccAccountTypesCompatible (aw->type, xaccAccountGetType (account)))
         return;
 
     set_children_types (account, aw->type);
@@ -709,7 +709,7 @@ verify_children_compatible (AccountWindow *aw)
     if (!account)
         return FALSE;
 
-    if (xaccAccountTypesCompatible (xaccAccountGetType (account), aw->type))
+    if (xaccAccountTypesCompatible (aw->type, xaccAccountGetType (account)))
         return TRUE;
 
     if (gnc_account_n_children(account) == 0)
@@ -879,7 +879,7 @@ gnc_common_ok (AccountWindow *aw)
     }
 
     /* check whether the types of child and parent are compatible */
-    if (!xaccAccountTypesCompatible (aw->type, xaccAccountGetType (parent)))
+    if (!xaccAccountTypesCompatible (xaccAccountGetType (parent), aw->type))
     {
         const char *message = _("The selected account type is incompatible with "
                                 "the one of the selected parent.");
@@ -1977,7 +1977,8 @@ gnc_ui_edit_account_window(GtkWindow *parent, Account *account)
     gnc_resume_gui_refresh ();
 
     gtk_widget_show_all (aw->dialog);
-    gtk_widget_hide (aw->opening_balance_page);
+    if (xaccAccountGetSplitList (account) != NULL)
+        gtk_widget_hide (aw->opening_balance_page);
 
     parent_acct = gnc_account_get_parent (account);
     if (parent_acct == NULL)

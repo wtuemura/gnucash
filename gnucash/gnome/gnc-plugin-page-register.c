@@ -1414,6 +1414,7 @@ gnc_plugin_page_register_create_widget (GncPluginPage* plugin_page)
 
     {
         gchar** filter;
+        gchar* filter_str;
         guint filtersize = 0;
         /* Set the sort order for the split register and status of save order button */
         priv->sd.save_order = FALSE;
@@ -1440,9 +1441,10 @@ gnc_plugin_page_register_create_widget (GncPluginPage* plugin_page)
         /* Set the filter for the split register and status of save filter button */
         priv->fd.save_filter = FALSE;
 
-        filter = g_strsplit (gnc_plugin_page_register_get_filter (plugin_page), ",",
-                             -1);
+        filter_str = gnc_plugin_page_register_get_filter (plugin_page);
+        filter = g_strsplit (filter_str, ",", -1);
         filtersize = g_strv_length (filter);
+        g_free (filter_str);
 
         PINFO ("Loaded Filter Status is %s", filter[0]);
 
@@ -1974,7 +1976,7 @@ gnc_plugin_page_register_finish_pending (GncPluginPage* page)
     GncPluginPageRegister* reg_page;
     SplitRegister* reg;
     GtkWidget* dialog, *window;
-    const gchar* name;
+    gchar* name;
     gint response;
 
     if (is_scrubbing && show_abort_verify)
@@ -1999,6 +2001,7 @@ gnc_plugin_page_register_finish_pending (GncPluginPage* page)
                                      /* Translators: %s is the name
                                         of the tab page */
                                      _ ("Save changes to %s?"), name);
+    g_free (name);
     gtk_message_dialog_format_secondary_text
     (GTK_MESSAGE_DIALOG (dialog),
      "%s",
@@ -2042,7 +2045,7 @@ gnc_plugin_page_register_get_tab_name (GncPluginPage* plugin_page)
     Account* leader;
 
     g_return_val_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER (plugin_page),
-                          _ ("unknown"));
+                          g_strdup (_("unknown")));
 
     priv = GNC_PLUGIN_PAGE_REGISTER_GET_PRIVATE (plugin_page);
     ld = priv->ledger;
@@ -2090,7 +2093,7 @@ gnc_plugin_page_register_get_tab_color (GncPluginPage* plugin_page)
     const char* color;
 
     g_return_val_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER (plugin_page),
-                          _ ("unknown"));
+                          g_strdup (_("unknown")));
 
     priv = GNC_PLUGIN_PAGE_REGISTER_GET_PRIVATE (plugin_page);
     ld = priv->ledger;
@@ -2116,30 +2119,26 @@ gnc_plugin_page_register_check_for_empty_group (GKeyFile *state_file, const gcha
     g_strfreev (keys);
 }
 
-static const gchar*
+static gchar*
 gnc_plugin_page_register_get_filter_gcm (Account* leader)
 {
     GKeyFile* state_file = gnc_state_get_current();
     gchar* state_section;
-    gchar* filter_text;
     gchar acct_guid[GUID_ENCODING_LENGTH + 1];
     GError* error = NULL;
-    const char* filter = NULL;
+    char* filter = NULL;
 
     // get the filter from the .gcm file
     guid_to_string_buff (xaccAccountGetGUID (leader), acct_guid);
     state_section = g_strconcat (STATE_SECTION_REG_PREFIX, " ", acct_guid, NULL);
-    filter_text = g_key_file_get_string (state_file, state_section,
-                                         KEY_PAGE_FILTER, &error);
+    filter = g_key_file_get_string (state_file, state_section,
+                                    KEY_PAGE_FILTER, &error);
 
     if (error)
         g_clear_error (&error);
     else
-    {
-        filter_text = g_strdelimit (filter_text, ";", ',');
-        filter = g_strdup (filter_text);
-        g_free (filter_text);
-    }
+        g_strdelimit (filter, ";", ',');
+
     g_free (state_section);
     return filter;
 }
@@ -2150,10 +2149,10 @@ gnc_plugin_page_register_get_filter (GncPluginPage* plugin_page)
     GncPluginPageRegisterPrivate* priv;
     GNCLedgerDisplayType ledger_type;
     Account* leader;
-    const char* filter = NULL;
+    char* filter = NULL;
 
     g_return_val_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER (plugin_page),
-                          _ ("unknown"));
+                          g_strdup (_("unknown")));
 
     priv = GNC_PLUGIN_PAGE_REGISTER_GET_PRIVATE (plugin_page);
 
@@ -2163,9 +2162,11 @@ gnc_plugin_page_register_get_filter (GncPluginPage* plugin_page)
     // load from gcm file
     filter = gnc_plugin_page_register_get_filter_gcm (leader);
 
-    return filter ? g_strdup (filter) : g_strdup_printf ("%s,%s,%s,%s",
-                                                         DEFAULT_FILTER,
-                                                         "0", "0", get_filter_default_num_of_days (ledger_type));
+    if (filter)
+        return filter;
+
+    return g_strdup_printf ("%s,%s,%s,%s", DEFAULT_FILTER,
+                            "0", "0", get_filter_default_num_of_days (ledger_type));
 }
 
 static void
@@ -2190,8 +2191,7 @@ gnc_plugin_page_register_set_filter_gcm (Account* leader, const gchar* filter,
     else
     {
         filter_text = g_strdup (filter);
-        filter_text = g_strdelimit (filter_text, ",",
-                                    ';'); // make it conform to .gcm file list
+        g_strdelimit (filter_text, ",", ';'); // make it conform to .gcm file list
         g_key_file_set_string (state_file, state_section, KEY_PAGE_FILTER,
                                filter_text);
         g_free (filter_text);
@@ -2223,7 +2223,7 @@ gnc_plugin_page_register_set_filter (GncPluginPage* plugin_page,
     return;
 }
 
-static const gchar*
+static gchar*
 gnc_plugin_page_register_get_sort_order_gcm (Account* leader)
 {
     GKeyFile* state_file = gnc_state_get_current();
@@ -2231,7 +2231,7 @@ gnc_plugin_page_register_get_sort_order_gcm (Account* leader)
     gchar* sort_text;
     gchar acct_guid[GUID_ENCODING_LENGTH + 1];
     GError* error = NULL;
-    const char* sort_order = NULL;
+    char* sort_order = NULL;
 
     // get the sort_order from the .gcm file
     guid_to_string_buff (xaccAccountGetGUID (leader), acct_guid);
@@ -2255,7 +2255,7 @@ gnc_plugin_page_register_get_sort_order (GncPluginPage* plugin_page)
 {
     GncPluginPageRegisterPrivate* priv;
     Account* leader;
-    const char* sort_order = NULL;
+    char* sort_order = NULL;
 
     g_return_val_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER (plugin_page),
                           _ ("unknown"));
@@ -2267,7 +2267,8 @@ gnc_plugin_page_register_get_sort_order (GncPluginPage* plugin_page)
     // load from gcm file
     sort_order = gnc_plugin_page_register_get_sort_order_gcm (leader);
 
-    return g_strdup (sort_order ? sort_order : DEFAULT_SORT_ORDER);
+
+    return sort_order ? sort_order : g_strdup (DEFAULT_SORT_ORDER);
 }
 
 static void
@@ -3181,7 +3182,7 @@ gnc_plugin_page_register_filter_start_cb (GtkWidget* radio,
     }
 
     name = gtk_buildable_get_name (GTK_BUILDABLE (radio));
-    active = (g_strcmp0 (name, g_strdup ("start_date_choose")) == 0 ? 1 : 0);
+    active = !g_strcmp0 (name, "start_date_choose");
     gtk_widget_set_sensitive (priv->fd.start_date, active);
     get_filter_times (page);
     gnc_ppr_update_date_query (page);
@@ -3229,7 +3230,7 @@ gnc_plugin_page_register_filter_end_cb (GtkWidget* radio,
     }
 
     name = gtk_buildable_get_name (GTK_BUILDABLE (radio));
-    active = (g_strcmp0 (name, g_strdup ("end_date_choose")) == 0 ? 1 : 0);
+    active = !g_strcmp0 (name, "end_date_choose");
     gtk_widget_set_sensitive (priv->fd.end_date, active);
     get_filter_times (page);
     gnc_ppr_update_date_query (page);
@@ -4081,6 +4082,12 @@ gnc_plugin_page_register_cmd_reverse_transaction (GtkAction* action,
     split = gnc_split_register_get_current_split (reg);
     account = xaccSplitGetAccount (split);
 
+    if (!account)
+    {
+        LEAVE ("shouldn't try to reverse the blank transaction...");
+        return;
+    }
+
     if (!gnc_dup_time64_dialog (window, _("Reverse Transaction"),
                                 _("New Transaction Information"), &date))
     {
@@ -4696,14 +4703,18 @@ static GncInvoice* invoice_from_split (Split* split)
 GList* invoices_from_transaction (Transaction* trans)
 {
     GList *invoices = NULL;
+    GList *apar_splits;
     if (!trans) return NULL;
 
-    for (GList *node = xaccTransGetAPARAcctSplitList(trans, TRUE); node;
-         node = node->next)
+    apar_splits = xaccTransGetAPARAcctSplitList (trans, TRUE);
+    if (!apar_splits) return NULL;
+
+    for (GList *node = apar_splits; node; node = node->next)
     {
         GncInvoice* inv = invoice_from_split ((Split*) node->data);
         if (inv) invoices = g_list_prepend (invoices, inv);
     }
+    g_list_free (apar_splits);
     return invoices;
 }
 
