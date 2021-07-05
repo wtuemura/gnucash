@@ -1360,6 +1360,8 @@ gnc_preferences_dialog_create (GtkWindow *parent)
     gnc_builder_add_from_file (builder, "dialog-preferences.glade", "auto_add_adj");
     gnc_builder_add_from_file (builder, "dialog-preferences.glade", "auto_clear_adj");
     gnc_builder_add_from_file (builder, "dialog-preferences.glade", "match_adj");
+    gnc_builder_add_from_file (builder, "dialog-preferences.glade", "likely_day_threshold");
+    gnc_builder_add_from_file (builder, "dialog-preferences.glade", "unlikely_day_threshold");
     gnc_builder_add_from_file (builder, "dialog-preferences.glade", "gnucash_preferences_dialog");
 
     dialog = GTK_WIDGET(gtk_builder_get_object (builder, "gnucash_preferences_dialog"));
@@ -1508,7 +1510,7 @@ gnc_preferences_dialog_create (GtkWindow *parent)
 
     g_object_unref (G_OBJECT(builder));
 
-    /* save the original account separator incase it changes */
+    /* save the original account separator in case it changes */
     g_object_set_data_full (G_OBJECT(entry), "original_text",
                             g_strdup (gtk_entry_get_text (GTK_ENTRY(entry))),
                             g_free);

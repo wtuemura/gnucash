@@ -616,7 +616,7 @@ gnc_finish_ok (AccountWindow *aw)
         Account *account;
         GtkTreeSelection *selection;
 
-        /* Drop the old parent_tree so we can update it with an upto date one */
+        /* Drop the old parent_tree so we can update it with an up to date one */
         gtk_container_remove (GTK_CONTAINER(aw->parent_scroll), GTK_WIDGET(aw->parent_tree));
         aw->parent_tree = gnc_tree_view_account_new (TRUE);
         gtk_container_add (GTK_CONTAINER(aw->parent_scroll), GTK_WIDGET(aw->parent_tree));
@@ -947,7 +947,7 @@ gnc_new_account_ok (AccountWindow *aw)
         return;
     }
 
-    if (!gnc_amount_edit_evaluate (GNC_AMOUNT_EDIT (aw->opening_balance_edit)))
+    if (!gnc_amount_edit_evaluate (GNC_AMOUNT_EDIT (aw->opening_balance_edit), NULL))
     {
         const char *message = _("You must enter a valid opening balance "
                                 "or leave it blank.");
@@ -1336,7 +1336,9 @@ commodity_changed_cb (GNCGeneralSelect *gsl, gpointer data)
                                  "%s", dialog_msg);
             gtk_dialog_run(GTK_DIALOG(dialog));
             gtk_widget_destroy(dialog);
+            g_signal_handlers_block_by_func (gsl, commodity_changed_cb, data);
             gnc_general_select_set_selected (gsl, xaccAccountGetCommodity (account));
+            g_signal_handlers_unblock_by_func (gsl, commodity_changed_cb, data);
             return;
         }
     }

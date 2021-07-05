@@ -844,7 +844,14 @@
       (let* ((split (car splits))
              (txn (xaccSplitGetParent split))
              (date (xaccTransGetDate txn))
-             (orig-value (xaccTransGetAccountAmount txn acc))
+             (amt/next-pair
+              (let lp1 ((splits splits) (acc 0) (non-txn '()))
+                (match splits
+                  (() (cons acc (reverse non-txn)))
+                  (((? (lambda (s) (equal? (xaccSplitGetParent s) txn)) head) . tail)
+                   (lp1 tail (+ (xaccSplitGetAmount head) acc) non-txn))
+                  ((head . tail) (lp1 tail acc (cons head non-txn))))))
+             (orig-value (car amt/next-pair))
              (value (AP-negate orig-value)))
 
         (add-row
@@ -863,7 +870,7 @@
            ((detailed) (make-payment->payee-table txn))
            (else '(()))))
 
-        (lp printed? (not odd-row?) (cdr splits) invalid-splits (+ total value)
+        (lp printed? (not odd-row?) (cdr amt/next-pair) invalid-splits (+ total value)
             (if (< 0 orig-value) (+ debit orig-value) debit)
             (if (< 0 orig-value) credit (- credit orig-value))
             tax
@@ -1255,6 +1262,7 @@
     (owner-report-create-internal guid owner type enddate)))
 
 (define (owner-report-create owner account)
+  (issue-deprecation-warning "owner-report-create is not used anymore. call owner-report-create-with-enddate instead")
   (owner-report-create-with-enddate owner account #f))
 
 (define (gnc:owner-report-create-internal
@@ -1262,12 +1270,12 @@
 
   (let* ((owner (gnc:split->owner split))
          (res (if (gncOwnerIsValid owner)
-                  (owner-report-create owner account)
+                  (owner-report-create-with-enddate owner account #f)
                   -1)))
     (gnc:split->owner #f)
     res))
 
 (gnc:register-report-hook ACCT-TYPE-RECEIVABLE #t gnc:owner-report-create-internal)
 (gnc:register-report-hook ACCT-TYPE-PAYABLE #t gnc:owner-report-create-internal)
-(export owner-report-create)
+(export owner-report-create)            ;deprecate
 (export owner-report-create-with-enddate)
